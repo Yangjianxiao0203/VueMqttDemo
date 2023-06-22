@@ -1,8 +1,13 @@
 <!-- eslint-disable no-unused-vars -->
-<script>
-  import Driver from "./components/DriverRide.vue";
-</script>
-
 <template>
-  <Driver />
+  <DriverRide />
 </template>
+<script>
+  import DriverRide from './components/DriverRide.vue';
+  export default {
+    name: 'App',
+    components: {
+      DriverRide
+    },
+  }
+</script>

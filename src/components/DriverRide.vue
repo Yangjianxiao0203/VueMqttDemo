@@ -1,6 +1,7 @@
+<!-- eslint-disable no-unused-vars -->
 <script>
 import mqtt from "mqtt";
-
+//https://stackoverflow.com/questions/68707553/uncaught-referenceerror-buffer-is-not-defined
 export default {
   data() {
     return {
@@ -8,14 +9,16 @@ export default {
         protocol: "ws",
         host: "localhost",
         port: 8083,
-        endpoint: null,
+        //options
+        //默认的endpoint是/mqtt
+        endpoint: "/mqtt",
         clean: false,
         connectTimeout: 10 * 1000, 
         reconnectPeriod: 4000, 
         clientId: "driver_" + Math.random().toString(16).substring(2, 8),
         // auth
-        username: "drivertest",
-        password: "123456",
+        username: "driver",
+        password: "distinctive0930",
       },
 
       subscription: {
@@ -24,7 +27,7 @@ export default {
       },
 
       publish: {
-        topic: this.subscription.topic,
+        topic: "",
         qos: 0,
         payload: '{ "msg": "Hello, I am browser." }',
       },
@@ -67,8 +70,11 @@ export default {
       try {
         this.connecting = true;
         const { protocol, host, port, endpoint, ...options } = this.connection;
-        const connectUrl = `${protocol}://${host}:${port}${endpoint}`;
+
+        const connectUrl = `${protocol}://${host}:${port}${endpoint?endpoint:""}`;
+
         this.client = mqtt.connect(connectUrl, options);
+
         if (this.client.on) {
           this.client.on("connect", () => {
             this.connecting = false;
@@ -133,13 +139,14 @@ export default {
     },
 
     getChannelFromCoordinates() {
-      return "ride-Alabama-Montgomery";
+      return "track-Alabama-Montgomery";
     },
   },
 
   created() {
     // 在 created 生命周期钩子函数中，根据坐标设置 topic
     this.subscription.topic = this.getChannelFromCoordinates();
+    this.publish.topic = this.getChannelFromCoordinates();
   }
 };
 </script>
